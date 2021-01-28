@@ -1,7 +1,28 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+# frozen_string_literal: true
+
+# rubocop:disable all
+
+margarita_id = Cocktail.upsert(
+  {
+    name: 'Margarita',
+    description: 'A margarita is a Mexican cocktail consisting of tequila, orange liqueur, and lime juice often served with salt on the rim of the glass',
+    instructions: 'Mix all the ingredients with ice in a cocktail shaker. Rim the glass with salt'
+  },
+  unique_by: :name
+).first['id']
+
+[
+  ['Tequila', '2 Oz'],
+  ['Cointreau', '1 Oz'],
+  ['Lime juice', '1 Oz'],
+  ['Salt', 'A bit']
+].each do |name, measurement|
+  ingredient = Ingredient.upsert({ name: name }, unique_by: :name).first
+  next unless ingredient
+  Portion.upsert(
+    {cocktail_id: margarita_id, ingredient_id: ingredient['id'], measurement: measurement},
+    unique_by: %i[cocktail_id ingredient_id]
+  )
+end
+
+# rubocop:enable all
