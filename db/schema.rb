@@ -1,3 +1,4 @@
+# rubocop:disable all
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -31,13 +32,18 @@ ActiveRecord::Schema.define(version: 2021_01_28_154537) do
     t.index ["name"], name: "index_ingredients_on_name", unique: true
   end
 
-  create_table "portions", id: false, force: :cascade do |t|
-    t.bigint "cocktail_id", null: false
-    t.bigint "ingredient_id", null: false
+  create_table "portions", force: :cascade do |t|
     t.string "measurement", null: false
+    t.bigint "cocktail_id"
+    t.bigint "ingredient_id"
+    t.datetime "created_at", precision: 6, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: 6, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["cocktail_id", "ingredient_id"], name: "index_portions_on_cocktail_id_and_ingredient_id", unique: true
     t.index ["cocktail_id"], name: "index_portions_on_cocktail_id"
     t.index ["ingredient_id"], name: "index_portions_on_ingredient_id"
   end
 
+  add_foreign_key "portions", "cocktails"
+  add_foreign_key "portions", "ingredients"
 end
+# rubocop:enable all

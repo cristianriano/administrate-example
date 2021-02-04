@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Cocktail < ApplicationRecord
-  # has_and_belongs_to_many :ingredients
   has_many :portions, dependent: :destroy
   has_many :ingredients, through: :portions
 
